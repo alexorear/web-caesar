@@ -17,11 +17,33 @@
 import webapp2
 import caesar
 
+# html boilerplate for the top of every page
+page_header = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web-Caesar</title>
+</head>
+<body>
+    <h1>Web-Caesar</h1>
+"""
+
+# html boilerplate for the bottom of every page
+page_footer = """
+</body>
+</html>
+"""
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         message = "Helloooo World!"
         encrypted_message = caesar.encrypt(message, 13)
-        self.response.write(encrypted_message)
+
+        textarea = "<textarea>" + encrypted_message + "</textarea>"
+        submit = "<input type='submit'/>"
+        form = "<form>" + textarea + "<br>" + submit + "</form>"
+
+        self.response.write(page_header + form + page_footer)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
