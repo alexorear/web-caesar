@@ -16,6 +16,7 @@
 #
 import webapp2
 import caesar
+import cgi
 
 def build_page(textarea_content):
     # html boilerplate for the top of every page
@@ -56,9 +57,10 @@ class MainHandler(webapp2.RequestHandler):
     def post(self):
         message = self.request.get("message")
         rot = self.request.get("rot")
-        encrypted_message = caesar.encrypt(message, rot)
 
-        content =build_page(encrypted_message)
+        encrypted_message = caesar.encrypt(message, rot)
+        escaped_message = cgi.escape(encrypted_message)
+        content =build_page(escaped_message)
 
         self.response.write(content)
 
