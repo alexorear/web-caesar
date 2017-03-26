@@ -36,17 +36,19 @@ page_footer = """
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        message = "Helloooo World!"
-        encrypted_message = caesar.encrypt(message, 13)
 
-        textarea = "<textarea>" + encrypted_message + "</textarea>"
+        textarea = "<textarea name='message'></textarea>"
+        rot_input = "<input type='number' name='rot'/>"
         submit = "<input type='submit'/>"
-        form = "<form method='post'>" + textarea + "<br>" + submit + "</form>"
+        form = "<form method='post'>" + rot_input + "<br>" + textarea + "<br>" + submit + "</form>"
 
         self.response.write(page_header + form + page_footer)
 
     def post(self):
-        self.response.write("Thanks for submitting that form!")
+        message = self.request.get("message")
+        rot = self.request.get("rot")
+        encrypted_message = caesar.encrypt(message, rot)
+        self.response.write(page_header + "The secret message is: " + encrypted_message + page_footer)
 
 
 app = webapp2.WSGIApplication([
