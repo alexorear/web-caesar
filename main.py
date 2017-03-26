@@ -17,38 +17,50 @@
 import webapp2
 import caesar
 
-# html boilerplate for the top of every page
-page_header = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Web-Caesar</title>
-</head>
-<body>
-    <h1>Web-Caesar</h1>
-"""
+def build_page(textarea_content):
+    # html boilerplate for the top of every page
+    page_header = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Web-Caesar</title>
+            </head>
+            <body>
+                <h2>Web-Caesar</h2>"""
 
-# html boilerplate for the bottom of every page
-page_footer = """
-</body>
-</html>
-"""
+    # html boilerplate for the bottom of every page
+    page_footer = """
+        </body>
+        </html>"""
+
+    # page content
+    rot_label = "<label> Rotate by: </label>"
+    rot_input = "<input type='number' name='rot'/>"
+
+    text_label = "<label>Type a message: </label>"
+    textarea = "<textarea name='message'>" + textarea_content + "</textarea>"
+
+    submit = "<input type='submit'/>"
+    form = ("<form method='post'>" +
+            rot_label + rot_input + "<br>" +
+            "<br>" + text_label + textarea + "<br>" +
+            "<br>" + submit + "</form>")
+
+    return page_header + form + page_footer
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-
-        textarea = "<textarea name='message'></textarea>"
-        rot_input = "<input type='number' name='rot'/>"
-        submit = "<input type='submit'/>"
-        form = "<form method='post'>" + rot_input + "<br>" + textarea + "<br>" + submit + "</form>"
-
-        self.response.write(page_header + form + page_footer)
+        content = build_page("")
+        self.response.write(content)
 
     def post(self):
         message = self.request.get("message")
         rot = self.request.get("rot")
         encrypted_message = caesar.encrypt(message, rot)
-        self.response.write(page_header + "The secret message is: " + encrypted_message + page_footer)
+
+        content =build_page(encrypted_message)
+
+        self.response.write(content)
 
 
 app = webapp2.WSGIApplication([
